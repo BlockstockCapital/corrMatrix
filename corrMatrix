@@ -1,0 +1,49 @@
+from cryptocmd import CmcScraper
+import pandas as pd
+from pandas import *
+
+# data download
+bat = CmcScraper('BAT', '01-01-2018', '24-04-2018')
+btc = CmcScraper('BTC', '01-01-2018', '24-04-2018')
+eth = CmcScraper('ETH', '01-01-2018', '24-04-2018')
+etc = CmcScraper('ETC', '01-01-2018', '24-04-2018')
+ltc = CmcScraper('LTC', '01-01-2018', '24-04-2018')
+xrp = CmcScraper('XRP', '01-01-2018', '24-04-2018')
+xmr = CmcScraper('XMR', '01-01-2018', '24-04-2018')
+zec = CmcScraper('ZEC', '01-01-2018', '24-04-2018')
+neo = CmcScraper('NEO', '01-01-2018', '24-04-2018')
+eos = CmcScraper('EOS', '01-01-2018', '24-04-2018')
+omg = CmcScraper('OMG', '01-01-2018', '24-04-2018')
+bch = CmcScraper('BCH', '01-01-2018', '24-04-2018')
+dash = CmcScraper('DASH', '01-01-2018', '24-04-2018')
+iota = CmcScraper('MIOTA', '01-01-2018', '24-04-2018')
+
+# close column
+def closePrice(token):
+    headers, data = token.get_data()
+    df = token.get_dataframe()
+    closePriceToken = df[df.columns[4]]
+    return closePriceToken
+
+
+myData = (closePrice(bat),
+          closePrice(btc),
+          closePrice(eth),
+          closePrice(etc),
+          closePrice(ltc),
+          closePrice(xrp),
+          closePrice(xmr),
+          closePrice(zec),
+          closePrice(neo),
+          closePrice(eos),
+          closePrice(omg),
+          closePrice(bch),
+          closePrice(dash),
+          closePrice(iota))
+
+corrMatrix = np.corrcoef(myData)
+
+df = pd.DataFrame(corrMatrix)
+writer = pd.ExcelWriter('corrMatrixNineCoinsCmc.xlsx', engine='xlsxwriter')
+df.to_excel(writer, 'Sheet1')
+writer.save()
