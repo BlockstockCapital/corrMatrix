@@ -1,0 +1,29 @@
+import numpy as np
+from cryptocmd import CmcScraper
+import datetime
+
+# daily return
+def dailyReturn(token):
+
+   #dataFrame.sort_index(inplace=True, ascending=False) #sort by ascending
+   returns = token.pct_change() # returns calculation
+   return returns
+
+
+def parseData(ticker, days):
+    today = datetime.date.today()
+    startd = today - datetime.timedelta(days)  # determine a start point
+    startdate = startd.strftime("%d-%m-%Y")  # convert to CMC  frame
+    enddate = today.strftime("%d-%m-%Y")
+    data = CmcScraper(ticker, startdate, enddate)
+    returnData = data.get_dataframe()['Close**']  # convert to pandas dataframe
+    return returnData
+
+
+def volatility(dailyRet):
+    volValues = []
+    for month in range(30, 390, 30):
+        vol = round(np.std(dailyRet[0:month]) * 100, 2)
+        volValues.append(vol)
+        #print('Volatility of ' + ticker + ' per ' + str(i / 30) + 'm is:', str(vol) + '%')
+    return volValues
